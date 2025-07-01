@@ -6,6 +6,8 @@ import { EffectComposerPmndrs, FXAAPmndrs } from '@tresjs/post-processing';
 
 <template>
   <TresCanvas window-size>
+    <TresPerspectiveCamera :position="[0, 150, 30]" :look-at="[0, 0, 0]" />
+
     <Grid :args="[10.5, 10.5]" cell-color="#f97316" :cell-size="1" :cell-thickness="0.8" section-color="#f97316"
       :section-size="10" :section-thickness="1" :infinite-grid="true" :fade-from="0" :fade-distance="200"
       :fade-strength="1" />
@@ -18,6 +20,8 @@ import { EffectComposerPmndrs, FXAAPmndrs } from '@tresjs/post-processing';
       </EffectComposerPmndrs>
     </Suspense>
 
-    <PlayerModel />
+    <Suspense>
+      <Scene />
+    </Suspense>
   </TresCanvas>
 </template>

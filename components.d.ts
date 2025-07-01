@@ -8,6 +8,14 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    PlayerModel: typeof import('./src/components/PlayerModel.vue')['default']
+    Airplane: typeof import('./src/components/globe/Airplane.vue')['default']
+    Cloud: typeof import('./src/components/globe/Cloud.vue')['default']
+    EnemySpawner: typeof import('./src/components/enemies/EnemySpawner.vue')['default']
+    Globe: typeof import('./src/components/globe/Globe.vue')['default']
+    NulosModel: typeof import('./src/components/enemies/models/NulosModel.vue')['default']
+    Planet: typeof import('./src/components/globe/Planet.vue')['default']
+    Player: typeof import('./src/components/player/Player.vue')['default']
+    PlayerModel: typeof import('./src/components/player/PlayerModel.vue')['default']
+    Scene: typeof import('./src/components/Scene.vue')['default']
   }
 }
