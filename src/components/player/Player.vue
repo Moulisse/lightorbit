@@ -22,9 +22,9 @@ const { flagPosition, pointerDown } = usePlayerControl(speed, playerRef, camera,
     </Suspense>
   </TresGroup>
 
-  <TresGroup @pointer-down="pointerDown()" ref="planeRef">
+  <TresGroup @pointer-down="pointerDown($event)" ref="planeRef" :position="[0, 0, 0]">
     <Plane :args="[1e10, 1e10]">
-      <TresMeshToonMaterial :visible="false" />
+      <TresMeshBasicMaterial :visible="false" />
     </Plane>
   </TresGroup>
 </template>

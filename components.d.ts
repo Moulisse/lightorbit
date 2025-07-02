@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Airplane: typeof import('./src/components/globe/Airplane.vue')['default']
     Cloud: typeof import('./src/components/globe/Cloud.vue')['default']
+    Enemy: typeof import('./src/components/enemies/Enemy.vue')['default']
     EnemySpawner: typeof import('./src/components/enemies/EnemySpawner.vue')['default']
     Globe: typeof import('./src/components/globe/Globe.vue')['default']
     NulosModel: typeof import('./src/components/enemies/models/NulosModel.vue')['default']

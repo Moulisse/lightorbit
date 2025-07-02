@@ -1,4 +1,4 @@
-import { useLoop } from "@tresjs/core"
+import { useLoop, type ThreeEvent } from "@tresjs/core"
 import { Camera, Group, Object3D, Raycaster, Vector2, Vector3 } from "three"
 import type { ShallowRef } from "vue"
 
@@ -17,15 +17,16 @@ export default function (
   /**
    * Mouse down
    */
-  function pointerDown() {
-    shouldFollowPointer = true
+  function pointerDown($event: ThreeEvent<PointerEvent>) {
+    if (!$event.button)
+      shouldFollowPointer = true
   }
 
   /**
    * Mouse up
    */
   watch(pressure, (pressure) => {
-    if (!pressure) {
+    if (!pressure && shouldFollowPointer) {
       shouldFollowPointer = false
       flagPosition = getMouseWorldPosition()
     }
@@ -39,11 +40,13 @@ export default function (
   function getMouseWorldPosition() {
     if (!playerRef.value || !cameraRef.value || !planeRef.value)
       return new Vector3(0, 0, 0)
+
     raycaster.setFromCamera(new Vector2(
       (pointerX.value / window.innerWidth) * 2 - 1,
       -(pointerY.value / window.innerHeight) * 2 + 1,
     ), cameraRef.value)
-    return raycaster.intersectObject(planeRef.value)[0].point
+
+    return raycaster.intersectObject(planeRef.value)[0]?.point
   }
 
   const { onBeforeRender } = useLoop()
@@ -56,6 +59,9 @@ export default function (
       return
 
     const targetPosition = shouldFollowPointer ? getMouseWorldPosition() : flagPosition
+
+    if (!targetPosition)
+      return
 
     const distanceToFlagX = targetPosition.x - playerRef.value.position.x
     const distanceToFlagZ = targetPosition.z - playerRef.value.position.z

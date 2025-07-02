@@ -3,6 +3,8 @@
 
 <template>
   <TresGroup :position="[10, 0, 0]">
-    <PlayerModel />
+    <Enemy>
+      <NulosModel />
+    </Enemy>
   </TresGroup>
 </template>

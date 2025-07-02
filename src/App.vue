@@ -15,13 +15,13 @@ import { EffectComposerPmndrs, FXAAPmndrs } from '@tresjs/post-processing';
     <TresDirectionalLight :position="[0, 100, 0]" :intensity="3" />
 
     <Suspense>
-      <EffectComposerPmndrs>
-        <FXAAPmndrs />
-      </EffectComposerPmndrs>
+      <Scene />
     </Suspense>
 
     <Suspense>
-      <Scene />
+      <EffectComposerPmndrs>
+        <FXAAPmndrs />
+      </EffectComposerPmndrs>
     </Suspense>
   </TresCanvas>
 </template>
