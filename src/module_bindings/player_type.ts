@@ -32,32 +32,44 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
+import { Vec2 as __Vec2 } from "./vec_2_type";
 
-export type SendMessage = {
-  text: string,
+export type Player = {
+  identity: Identity,
+  name: string | undefined,
+  online: boolean,
+  position: __Vec2 | undefined,
+  direction: __Vec2 | undefined,
+  flag: __Vec2 | undefined,
 };
 
 /**
  * A namespace for generated helper functions.
  */
-export namespace SendMessage {
+export namespace Player {
   /**
   * A function which returns this type represented as an AlgebraicType.
   * This function is derived from the AlgebraicType used to generate this type.
   */
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
-      new ProductTypeElement("text", AlgebraicType.createStringType()),
+      new ProductTypeElement("identity", AlgebraicType.createIdentityType()),
+      new ProductTypeElement("name", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
+      new ProductTypeElement("online", AlgebraicType.createBoolType()),
+      new ProductTypeElement("position", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
+      new ProductTypeElement("direction", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
+      new ProductTypeElement("flag", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
     ]);
   }
 
-  export function serialize(writer: BinaryWriter, value: SendMessage): void {
-    SendMessage.getTypeScriptAlgebraicType().serialize(writer, value);
+  export function serialize(writer: BinaryWriter, value: Player): void {
+    Player.getTypeScriptAlgebraicType().serialize(writer, value);
   }
 
-  export function deserialize(reader: BinaryReader): SendMessage {
-    return SendMessage.getTypeScriptAlgebraicType().deserialize(reader);
+  export function deserialize(reader: BinaryReader): Player {
+    return Player.getTypeScriptAlgebraicType().deserialize(reader);
   }
 
 }
+
 

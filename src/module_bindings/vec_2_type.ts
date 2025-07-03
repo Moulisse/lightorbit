@@ -32,34 +32,32 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
-export type User = {
-  identity: Identity,
-  name: string | undefined,
-  online: boolean,
+export type Vec2 = {
+  x: number,
+  y: number,
 };
 
 /**
  * A namespace for generated helper functions.
  */
-export namespace User {
+export namespace Vec2 {
   /**
   * A function which returns this type represented as an AlgebraicType.
   * This function is derived from the AlgebraicType used to generate this type.
   */
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
-      new ProductTypeElement("identity", AlgebraicType.createIdentityType()),
-      new ProductTypeElement("name", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
-      new ProductTypeElement("online", AlgebraicType.createBoolType()),
+      new ProductTypeElement("x", AlgebraicType.createF32Type()),
+      new ProductTypeElement("y", AlgebraicType.createF32Type()),
     ]);
   }
 
-  export function serialize(writer: BinaryWriter, value: User): void {
-    User.getTypeScriptAlgebraicType().serialize(writer, value);
+  export function serialize(writer: BinaryWriter, value: Vec2): void {
+    Vec2.getTypeScriptAlgebraicType().serialize(writer, value);
   }
 
-  export function deserialize(reader: BinaryReader): User {
-    return User.getTypeScriptAlgebraicType().deserialize(reader);
+  export function deserialize(reader: BinaryReader): Vec2 {
+    return Vec2.getTypeScriptAlgebraicType().deserialize(reader);
   }
 
 }

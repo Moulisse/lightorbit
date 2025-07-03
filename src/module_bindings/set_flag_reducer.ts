@@ -32,36 +32,34 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
-export type Message = {
-  sender: Identity,
-  sent: Timestamp,
-  text: string,
+
+import { Vec2 as __Vec2 } from "./vec_2_type";
+
+export type SetFlag = {
+  flag: __Vec2,
 };
 
 /**
  * A namespace for generated helper functions.
  */
-export namespace Message {
+export namespace SetFlag {
   /**
   * A function which returns this type represented as an AlgebraicType.
   * This function is derived from the AlgebraicType used to generate this type.
   */
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
-      new ProductTypeElement("sender", AlgebraicType.createIdentityType()),
-      new ProductTypeElement("sent", AlgebraicType.createTimestampType()),
-      new ProductTypeElement("text", AlgebraicType.createStringType()),
+      new ProductTypeElement("flag", __Vec2.getTypeScriptAlgebraicType()),
     ]);
   }
 
-  export function serialize(writer: BinaryWriter, value: Message): void {
-    Message.getTypeScriptAlgebraicType().serialize(writer, value);
+  export function serialize(writer: BinaryWriter, value: SetFlag): void {
+    SetFlag.getTypeScriptAlgebraicType().serialize(writer, value);
   }
 
-  export function deserialize(reader: BinaryReader): Message {
-    return Message.getTypeScriptAlgebraicType().deserialize(reader);
+  export function deserialize(reader: BinaryReader): SetFlag {
+    return SetFlag.getTypeScriptAlgebraicType().deserialize(reader);
   }
 
 }
-
 

@@ -38,36 +38,32 @@ import { ClientConnected } from "./client_connected_reducer.ts";
 export { ClientConnected };
 import { IdentityDisconnected } from "./identity_disconnected_reducer.ts";
 export { IdentityDisconnected };
-import { SendMessage } from "./send_message_reducer.ts";
-export { SendMessage };
+import { SetDirection } from "./set_direction_reducer.ts";
+export { SetDirection };
+import { SetFlag } from "./set_flag_reducer.ts";
+export { SetFlag };
 import { SetName } from "./set_name_reducer.ts";
 export { SetName };
 
 // Import and reexport all table handle types
-import { MessageTableHandle } from "./message_table.ts";
-export { MessageTableHandle };
-import { UserTableHandle } from "./user_table.ts";
-export { UserTableHandle };
+import { PlayerTableHandle } from "./player_table.ts";
+export { PlayerTableHandle };
 
 // Import and reexport all types
-import { Message } from "./message_type.ts";
-export { Message };
-import { User } from "./user_type.ts";
-export { User };
+import { Player } from "./player_type.ts";
+export { Player };
+import { Vec2 } from "./vec_2_type.ts";
+export { Vec2 };
 
 const REMOTE_MODULE = {
   tables: {
-    message: {
-      tableName: "message",
-      rowType: Message.getTypeScriptAlgebraicType(),
-    },
-    user: {
-      tableName: "user",
-      rowType: User.getTypeScriptAlgebraicType(),
+    player: {
+      tableName: "player",
+      rowType: Player.getTypeScriptAlgebraicType(),
       primaryKey: "identity",
       primaryKeyInfo: {
         colName: "identity",
-        colType: User.getTypeScriptAlgebraicType().product.elements[0].algebraicType,
+        colType: Player.getTypeScriptAlgebraicType().product.elements[0].algebraicType,
       },
     },
   },
@@ -80,9 +76,13 @@ const REMOTE_MODULE = {
       reducerName: "identity_disconnected",
       argsType: IdentityDisconnected.getTypeScriptAlgebraicType(),
     },
-    send_message: {
-      reducerName: "send_message",
-      argsType: SendMessage.getTypeScriptAlgebraicType(),
+    set_direction: {
+      reducerName: "set_direction",
+      argsType: SetDirection.getTypeScriptAlgebraicType(),
+    },
+    set_flag: {
+      reducerName: "set_flag",
+      argsType: SetFlag.getTypeScriptAlgebraicType(),
     },
     set_name: {
       reducerName: "set_name",
@@ -120,7 +120,8 @@ const REMOTE_MODULE = {
 export type Reducer = never
 | { name: "ClientConnected", args: ClientConnected }
 | { name: "IdentityDisconnected", args: IdentityDisconnected }
-| { name: "SendMessage", args: SendMessage }
+| { name: "SetDirection", args: SetDirection }
+| { name: "SetFlag", args: SetFlag }
 | { name: "SetName", args: SetName }
 ;
 
@@ -143,20 +144,36 @@ export class RemoteReducers {
     this.connection.offReducer("identity_disconnected", callback);
   }
 
-  sendMessage(text: string) {
-    const __args = { text };
+  setDirection(direction: Vec2) {
+    const __args = { direction };
     let __writer = new BinaryWriter(1024);
-    SendMessage.getTypeScriptAlgebraicType().serialize(__writer, __args);
+    SetDirection.getTypeScriptAlgebraicType().serialize(__writer, __args);
     let __argsBuffer = __writer.getBuffer();
-    this.connection.callReducer("send_message", __argsBuffer, this.setCallReducerFlags.sendMessageFlags);
+    this.connection.callReducer("set_direction", __argsBuffer, this.setCallReducerFlags.setDirectionFlags);
   }
 
-  onSendMessage(callback: (ctx: ReducerEventContext, text: string) => void) {
-    this.connection.onReducer("send_message", callback);
+  onSetDirection(callback: (ctx: ReducerEventContext, direction: Vec2) => void) {
+    this.connection.onReducer("set_direction", callback);
   }
 
-  removeOnSendMessage(callback: (ctx: ReducerEventContext, text: string) => void) {
-    this.connection.offReducer("send_message", callback);
+  removeOnSetDirection(callback: (ctx: ReducerEventContext, direction: Vec2) => void) {
+    this.connection.offReducer("set_direction", callback);
+  }
+
+  setFlag(flag: Vec2) {
+    const __args = { flag };
+    let __writer = new BinaryWriter(1024);
+    SetFlag.getTypeScriptAlgebraicType().serialize(__writer, __args);
+    let __argsBuffer = __writer.getBuffer();
+    this.connection.callReducer("set_flag", __argsBuffer, this.setCallReducerFlags.setFlagFlags);
+  }
+
+  onSetFlag(callback: (ctx: ReducerEventContext, flag: Vec2) => void) {
+    this.connection.onReducer("set_flag", callback);
+  }
+
+  removeOnSetFlag(callback: (ctx: ReducerEventContext, flag: Vec2) => void) {
+    this.connection.offReducer("set_flag", callback);
   }
 
   setName(name: string) {
@@ -178,9 +195,14 @@ export class RemoteReducers {
 }
 
 export class SetReducerFlags {
-  sendMessageFlags: CallReducerFlags = 'FullUpdate';
-  sendMessage(flags: CallReducerFlags) {
-    this.sendMessageFlags = flags;
+  setDirectionFlags: CallReducerFlags = 'FullUpdate';
+  setDirection(flags: CallReducerFlags) {
+    this.setDirectionFlags = flags;
+  }
+
+  setFlagFlags: CallReducerFlags = 'FullUpdate';
+  setFlag(flags: CallReducerFlags) {
+    this.setFlagFlags = flags;
   }
 
   setNameFlags: CallReducerFlags = 'FullUpdate';
@@ -193,12 +215,8 @@ export class SetReducerFlags {
 export class RemoteTables {
   constructor(private connection: DbConnectionImpl) {}
 
-  get message(): MessageTableHandle {
-    return new MessageTableHandle(this.connection.clientCache.getOrCreateTable<Message>(REMOTE_MODULE.tables.message));
-  }
-
-  get user(): UserTableHandle {
-    return new UserTableHandle(this.connection.clientCache.getOrCreateTable<User>(REMOTE_MODULE.tables.user));
+  get player(): PlayerTableHandle {
+    return new PlayerTableHandle(this.connection.clientCache.getOrCreateTable<Player>(REMOTE_MODULE.tables.player));
   }
 }
 

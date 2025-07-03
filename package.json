@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "st-start": "spacetime start",
-    "st-publish": "spacetime publish --project-path spacetimeDB/server orbit",
+    "st-publish": "spacetime publish --project-path spacetimeDB/server orbit -c",
     "st-generate": "spacetime generate --lang typescript --out-dir src/module_bindings --project-path spacetimeDB/server",
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
