@@ -42,7 +42,7 @@ pub fn client_connected(ctx: &ReducerContext) {
             name: None,
             identity: ctx.sender,
             online: true,
-            position: Vec2 { x: 0.0, y: 0.0 },
+            position: Vec2 { x: 0.0, z: 0.0 },
             direction: None,
             flag: None,
         });

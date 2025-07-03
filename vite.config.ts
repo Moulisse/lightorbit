@@ -21,7 +21,8 @@ export default defineConfig({
     AutoImport({
       imports: [
         'vue',
-        '@vueuse/core'
+        '@vueuse/core',
+        'pinia'
       ],
       dts: true,
       dirs: [

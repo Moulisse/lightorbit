@@ -2,7 +2,6 @@ import { useLoop, type ThreeEvent } from "@tresjs/core"
 import { Camera, Group, Object3D, Raycaster, Vector2, Vector3 } from "three"
 import type { ShallowRef } from "vue"
 
-const { x: pointerX, y: pointerY, pressure } = usePointer()
 
 export default function (
   speed: MaybeRef<number>,
@@ -10,16 +9,20 @@ export default function (
   cameraRef: ShallowRef<Camera | undefined>,
   planeRef: ShallowRef<Object3D | undefined>,
 ) {
+  const { x: pointerX, y: pointerY, pressure } = usePointer()
+  const useConnection = useConnectionStore()
 
   let flagPosition = new Vector3(0, 0, 0)
-  let shouldFollowPointer = false
+  const shouldFollowPointer = ref(false)
+
+  const targetPosition = computed(() => shouldFollowPointer.value ? getMouseWorldPosition() : flagPosition)
 
   /**
    * Mouse down
    */
   function pointerDown($event: ThreeEvent<PointerEvent>) {
     if (!$event.button)
-      shouldFollowPointer = true
+      shouldFollowPointer.value = true
   }
 
   /**
@@ -27,7 +30,7 @@ export default function (
    */
   watch(pressure, (pressure) => {
     if (!pressure && shouldFollowPointer) {
-      shouldFollowPointer = false
+      shouldFollowPointer.value = false
       flagPosition = getMouseWorldPosition()
     }
   })
@@ -58,19 +61,17 @@ export default function (
     if (!playerRef.value || !cameraRef.value || !planeRef.value)
       return
 
-    const targetPosition = shouldFollowPointer ? getMouseWorldPosition() : flagPosition
-
-    if (!targetPosition)
+    if (!targetPosition.value)
       return
 
-    const distanceToFlagX = targetPosition.x - playerRef.value.position.x
-    const distanceToFlagZ = targetPosition.z - playerRef.value.position.z
+    const distanceToFlagX = targetPosition.value.x - playerRef.value.position.x
+    const distanceToFlagZ = targetPosition.value.z - playerRef.value.position.z
     const distanceToFlag = Math.sqrt(distanceToFlagX * distanceToFlagX + distanceToFlagZ * distanceToFlagZ)
 
     if (distanceToFlag < toValue(speed) / 100)
       return
 
-    playerRef.value.lookAt(targetPosition)
+    playerRef.value.lookAt(targetPosition.value)
 
     playerRef.value.position.x += distanceToFlagX / distanceToFlag * delta * toValue(speed)
     playerRef.value.position.z += distanceToFlagZ / distanceToFlag * delta * toValue(speed)
@@ -87,6 +88,14 @@ export default function (
 
     cameraRef.value.lookAt(playerRef.value.position)
   })
+
+  setInterval(() => {
+    if (shouldFollowPointer.value) {
+      useConnection.conn?.reducers.setDirection({ x: targetPosition.value.x, z: targetPosition.value.z })
+    } else {
+      useConnection.conn?.reducers.setFlag({ x: targetPosition.value.x, z: targetPosition.value.z })
+    }
+  }, 1000);
 
   return {
     flagPosition,

@@ -34,7 +34,7 @@ import {
 } from "@clockworklabs/spacetimedb-sdk";
 export type Vec2 = {
   x: number,
-  y: number,
+  z: number,
 };
 
 /**
@@ -48,7 +48,7 @@ export namespace Vec2 {
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
       new ProductTypeElement("x", AlgebraicType.createF32Type()),
-      new ProductTypeElement("y", AlgebraicType.createF32Type()),
+      new ProductTypeElement("z", AlgebraicType.createF32Type()),
     ]);
   }
 
