@@ -10,7 +10,7 @@ pub struct Player {
     name: Option<String>,
     online: bool,
     // Set by the server
-    position: Option<Vec2>,
+    position: Vec2,
     // Set by the client
     direction: Option<Vec2>,
     flag: Option<Vec2>,
@@ -42,7 +42,7 @@ pub fn client_connected(ctx: &ReducerContext) {
             name: None,
             identity: ctx.sender,
             online: true,
-            position: None,
+            position: Vec2 { x: 0.0, y: 0.0 },
             direction: None,
             flag: None,
         });

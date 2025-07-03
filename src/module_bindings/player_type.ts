@@ -38,7 +38,7 @@ export type Player = {
   identity: Identity,
   name: string | undefined,
   online: boolean,
-  position: __Vec2 | undefined,
+  position: __Vec2,
   direction: __Vec2 | undefined,
   flag: __Vec2 | undefined,
 };
@@ -56,7 +56,7 @@ export namespace Player {
       new ProductTypeElement("identity", AlgebraicType.createIdentityType()),
       new ProductTypeElement("name", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
       new ProductTypeElement("online", AlgebraicType.createBoolType()),
-      new ProductTypeElement("position", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
+      new ProductTypeElement("position", __Vec2.getTypeScriptAlgebraicType()),
       new ProductTypeElement("direction", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
       new ProductTypeElement("flag", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
     ]);
