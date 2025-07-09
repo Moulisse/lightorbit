@@ -106,7 +106,7 @@ export default function (
     useConnection.conn?.reducers.setDirection(direction ? { x: direction.x, z: direction.z } : undefined)
   }, 1000);
 
-  useConnection.conn?.db.entity.onUpdate(ctx => {
+  useConnection.conn?.reducers.onMoveAllEntities(ctx => {
     console.log(ctx);
 
   })
