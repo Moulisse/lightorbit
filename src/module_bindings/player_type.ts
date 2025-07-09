@@ -32,15 +32,11 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
-import { Vec2 as __Vec2 } from "./vec_2_type";
-
 export type Player = {
   identity: Identity,
   name: string | undefined,
   online: boolean,
-  position: __Vec2,
-  direction: __Vec2 | undefined,
-  flag: __Vec2 | undefined,
+  entityId: number,
 };
 
 /**
@@ -56,9 +52,7 @@ export namespace Player {
       new ProductTypeElement("identity", AlgebraicType.createIdentityType()),
       new ProductTypeElement("name", AlgebraicType.createOptionType(AlgebraicType.createStringType())),
       new ProductTypeElement("online", AlgebraicType.createBoolType()),
-      new ProductTypeElement("position", __Vec2.getTypeScriptAlgebraicType()),
-      new ProductTypeElement("direction", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
-      new ProductTypeElement("flag", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
+      new ProductTypeElement("entityId", AlgebraicType.createU32Type()),
     ]);
   }
 

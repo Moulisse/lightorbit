@@ -32,23 +32,25 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
-import { Player } from "./player_type";
+import { Entity } from "./entity_type";
+import { Vec2 as __Vec2 } from "./vec_2_type";
+
 import { type EventContext, type Reducer, RemoteReducers, RemoteTables } from ".";
 
 /**
- * Table handle for the table `player`.
+ * Table handle for the table `entity`.
  *
- * Obtain a handle from the [`player`] property on [`RemoteTables`],
- * like `ctx.db.player`.
+ * Obtain a handle from the [`entity`] property on [`RemoteTables`],
+ * like `ctx.db.entity`.
  *
  * Users are encouraged not to explicitly reference this type,
  * but to directly chain method calls,
- * like `ctx.db.player.on_insert(...)`.
+ * like `ctx.db.entity.on_insert(...)`.
  */
-export class PlayerTableHandle {
-  tableCache: TableCache<Player>;
+export class EntityTableHandle {
+  tableCache: TableCache<Entity>;
 
-  constructor(tableCache: TableCache<Player>) {
+  constructor(tableCache: TableCache<Entity>) {
     this.tableCache = tableCache;
   }
 
@@ -56,53 +58,53 @@ export class PlayerTableHandle {
     return this.tableCache.count();
   }
 
-  iter(): Iterable<Player> {
+  iter(): Iterable<Entity> {
     return this.tableCache.iter();
   }
   /**
-   * Access to the `identity` unique index on the table `player`,
+   * Access to the `entityId` unique index on the table `entity`,
    * which allows point queries on the field of the same name
-   * via the [`PlayerIdentityUnique.find`] method.
+   * via the [`EntityEntityIdUnique.find`] method.
    *
    * Users are encouraged not to explicitly reference this type,
    * but to directly chain method calls,
-   * like `ctx.db.player.identity().find(...)`.
+   * like `ctx.db.entity.entityId().find(...)`.
    *
-   * Get a handle on the `identity` unique index on the table `player`.
+   * Get a handle on the `entityId` unique index on the table `entity`.
    */
-  identity = {
-    // Find the subscribed row whose `identity` column value is equal to `col_val`,
+  entityId = {
+    // Find the subscribed row whose `entityId` column value is equal to `col_val`,
     // if such a row is present in the client cache.
-    find: (col_val: Identity): Player | undefined => {
+    find: (col_val: number): Entity | undefined => {
       for (let row of this.tableCache.iter()) {
-        if (deepEqual(row.identity, col_val)) {
+        if (deepEqual(row.entityId, col_val)) {
           return row;
         }
       }
     },
   };
 
-  onInsert = (cb: (ctx: EventContext, row: Player) => void) => {
+  onInsert = (cb: (ctx: EventContext, row: Entity) => void) => {
     return this.tableCache.onInsert(cb);
   }
 
-  removeOnInsert = (cb: (ctx: EventContext, row: Player) => void) => {
+  removeOnInsert = (cb: (ctx: EventContext, row: Entity) => void) => {
     return this.tableCache.removeOnInsert(cb);
   }
 
-  onDelete = (cb: (ctx: EventContext, row: Player) => void) => {
+  onDelete = (cb: (ctx: EventContext, row: Entity) => void) => {
     return this.tableCache.onDelete(cb);
   }
 
-  removeOnDelete = (cb: (ctx: EventContext, row: Player) => void) => {
+  removeOnDelete = (cb: (ctx: EventContext, row: Entity) => void) => {
     return this.tableCache.removeOnDelete(cb);
   }
 
   // Updates are only defined for tables with primary keys.
-  onUpdate = (cb: (ctx: EventContext, oldRow: Player, newRow: Player) => void) => {
+  onUpdate = (cb: (ctx: EventContext, oldRow: Entity, newRow: Entity) => void) => {
     return this.tableCache.onUpdate(cb);
   }
 
-  removeOnUpdate = (cb: (ctx: EventContext, onRow: Player, newRow: Player) => void) => {
+  removeOnUpdate = (cb: (ctx: EventContext, onRow: Entity, newRow: Entity) => void) => {
     return this.tableCache.removeOnUpdate(cb);
   }}

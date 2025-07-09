@@ -33,32 +33,32 @@ import {
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
 
-import { Vec2 as __Vec2 } from "./vec_2_type";
+import { MoveAllEntitiesTimer as __MoveAllEntitiesTimer } from "./move_all_entities_timer_type";
 
-export type SetFlag = {
-  flag: __Vec2,
+export type MoveAllEntities = {
+  timer: __MoveAllEntitiesTimer,
 };
 
 /**
  * A namespace for generated helper functions.
  */
-export namespace SetFlag {
+export namespace MoveAllEntities {
   /**
   * A function which returns this type represented as an AlgebraicType.
   * This function is derived from the AlgebraicType used to generate this type.
   */
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
-      new ProductTypeElement("flag", __Vec2.getTypeScriptAlgebraicType()),
+      new ProductTypeElement("timer", __MoveAllEntitiesTimer.getTypeScriptAlgebraicType()),
     ]);
   }
 
-  export function serialize(writer: BinaryWriter, value: SetFlag): void {
-    SetFlag.getTypeScriptAlgebraicType().serialize(writer, value);
+  export function serialize(writer: BinaryWriter, value: MoveAllEntities): void {
+    MoveAllEntities.getTypeScriptAlgebraicType().serialize(writer, value);
   }
 
-  export function deserialize(reader: BinaryReader): SetFlag {
-    return SetFlag.getTypeScriptAlgebraicType().deserialize(reader);
+  export function deserialize(reader: BinaryReader): MoveAllEntities {
+    return MoveAllEntities.getTypeScriptAlgebraicType().deserialize(reader);
   }
 
 }

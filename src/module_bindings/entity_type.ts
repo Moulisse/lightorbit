@@ -32,34 +32,38 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
-
 import { Vec2 as __Vec2 } from "./vec_2_type";
 
-export type SetDirection = {
+export type Entity = {
+  entityId: number,
+  position: __Vec2,
   direction: __Vec2 | undefined,
 };
 
 /**
  * A namespace for generated helper functions.
  */
-export namespace SetDirection {
+export namespace Entity {
   /**
   * A function which returns this type represented as an AlgebraicType.
   * This function is derived from the AlgebraicType used to generate this type.
   */
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
+      new ProductTypeElement("entityId", AlgebraicType.createU32Type()),
+      new ProductTypeElement("position", __Vec2.getTypeScriptAlgebraicType()),
       new ProductTypeElement("direction", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
     ]);
   }
 
-  export function serialize(writer: BinaryWriter, value: SetDirection): void {
-    SetDirection.getTypeScriptAlgebraicType().serialize(writer, value);
+  export function serialize(writer: BinaryWriter, value: Entity): void {
+    Entity.getTypeScriptAlgebraicType().serialize(writer, value);
   }
 
-  export function deserialize(reader: BinaryReader): SetDirection {
-    return SetDirection.getTypeScriptAlgebraicType().deserialize(reader);
+  export function deserialize(reader: BinaryReader): Entity {
+    return Entity.getTypeScriptAlgebraicType().deserialize(reader);
   }
 
 }
+
 

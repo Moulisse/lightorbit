@@ -32,34 +32,34 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
-
-import { Vec2 as __Vec2 } from "./vec_2_type";
-
-export type SetDirection = {
-  direction: __Vec2 | undefined,
+export type MoveAllEntitiesTimer = {
+  scheduledId: bigint,
+  scheduledAt: { tag: "Interval", value: TimeDuration } | { tag: "Time", value: Timestamp },
 };
 
 /**
  * A namespace for generated helper functions.
  */
-export namespace SetDirection {
+export namespace MoveAllEntitiesTimer {
   /**
   * A function which returns this type represented as an AlgebraicType.
   * This function is derived from the AlgebraicType used to generate this type.
   */
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
-      new ProductTypeElement("direction", AlgebraicType.createOptionType(__Vec2.getTypeScriptAlgebraicType())),
+      new ProductTypeElement("scheduledId", AlgebraicType.createU64Type()),
+      new ProductTypeElement("scheduledAt", AlgebraicType.createScheduleAtType()),
     ]);
   }
 
-  export function serialize(writer: BinaryWriter, value: SetDirection): void {
-    SetDirection.getTypeScriptAlgebraicType().serialize(writer, value);
+  export function serialize(writer: BinaryWriter, value: MoveAllEntitiesTimer): void {
+    MoveAllEntitiesTimer.getTypeScriptAlgebraicType().serialize(writer, value);
   }
 
-  export function deserialize(reader: BinaryReader): SetDirection {
-    return SetDirection.getTypeScriptAlgebraicType().deserialize(reader);
+  export function deserialize(reader: BinaryReader): MoveAllEntitiesTimer {
+    return MoveAllEntitiesTimer.getTypeScriptAlgebraicType().deserialize(reader);
   }
 
 }
+
 

@@ -1,19 +1,29 @@
 pub mod math;
 
+use std::time::Duration;
+
 use math::Vec2;
-use spacetimedb::{reducer, table, Identity, ReducerContext, Table};
+use spacetimedb::{reducer, table, Identity, ReducerContext, ScheduleAt, Table};
 
 #[table(name = player, public)]
 pub struct Player {
     #[primary_key]
-    identity: Identity,
-    name: Option<String>,
-    online: bool,
+    pub identity: Identity,
+    pub name: Option<String>,
+    pub online: bool,
+
+    pub entity_id: u32,
+}
+
+#[table(name = entity, public)]
+pub struct Entity {
+    #[auto_inc]
+    #[primary_key]
+    pub entity_id: u32,
     // Set by the server
-    position: Vec2,
+    pub position: Vec2,
     // Set by the client
-    direction: Option<Vec2>,
-    flag: Option<Vec2>,
+    pub direction: Option<Vec2>,
 }
 
 /// Takes a name and checks if it's acceptable as a player's name.
@@ -25,8 +35,8 @@ fn validate_name(name: String) -> Result<String, String> {
     }
 }
 
-#[reducer(client_connected)]
 /// Called when a client connects to a SpacetimeDB database server
+#[reducer(client_connected)]
 pub fn client_connected(ctx: &ReducerContext) {
     if let Some(player) = ctx.db.player().identity().find(ctx.sender) {
         // If this is a returning player, i.e. we already have a `Player` with this `Identity`,
@@ -38,19 +48,23 @@ pub fn client_connected(ctx: &ReducerContext) {
     } else {
         // If this is a new player, create a `Player` row for the `Identity`,
         // which is online, but hasn't set a name.
+        let entity = ctx.db.entity().insert(Entity {
+            entity_id: 0,
+            position: Vec2 { x: 0.0, z: 0.0 },
+            direction: None,
+        });
+
         ctx.db.player().insert(Player {
             name: None,
             identity: ctx.sender,
             online: true,
-            position: Vec2 { x: 0.0, z: 0.0 },
-            direction: None,
-            flag: None,
+            entity_id: entity.entity_id,
         });
     }
 }
 
-#[reducer(client_disconnected)]
 // Called when a client disconnects from SpacetimeDB database server
+#[reducer(client_disconnected)]
 pub fn identity_disconnected(ctx: &ReducerContext) {
     if let Some(player) = ctx.db.player().identity().find(ctx.sender) {
         ctx.db.player().identity().update(Player {
@@ -67,8 +81,8 @@ pub fn identity_disconnected(ctx: &ReducerContext) {
     }
 }
 
-#[reducer]
 /// Clients invoke this reducer to set their player names.
+#[reducer]
 pub fn set_name(ctx: &ReducerContext, name: String) -> Result<(), String> {
     let name = validate_name(name)?;
     if let Some(player) = ctx.db.player().identity().find(ctx.sender) {
@@ -82,36 +96,67 @@ pub fn set_name(ctx: &ReducerContext, name: String) -> Result<(), String> {
     }
 }
 
-#[reducer]
 /// Client can set their direction, removing their flag
-pub fn set_direction(ctx: &ReducerContext, direction: Vec2) -> Result<(), String> {
+#[reducer]
+pub fn set_direction(ctx: &ReducerContext, direction: Option<Vec2>) -> Result<(), String> {
     let player = ctx
         .db
         .player()
         .identity()
         .find(&ctx.sender)
         .ok_or("Player not found")?;
-    ctx.db.player().identity().update(Player {
-        direction: Some(direction.normalized()),
-        flag: None,
-        ..player
-    });
+
+    if let Some(entity) = ctx.db.entity().entity_id().find(player.entity_id) {
+        ctx.db.entity().entity_id().update(Entity {
+            direction,
+            ..entity
+        });
+        Ok(())
+    } else {
+        Err("Entity not found".to_string())
+    }
+}
+
+/// First, we declare the table with scheduling information.
+#[table(name = move_all_entities_timer, scheduled(move_all_entities))]
+pub struct MoveAllEntitiesTimer {
+    #[primary_key]
+    #[auto_inc]
+    scheduled_id: u64,
+    scheduled_at: spacetimedb::ScheduleAt,
+}
+
+/// Then, we declare the scheduled reducer.
+#[reducer]
+pub fn move_all_entities(ctx: &ReducerContext, _timer: MoveAllEntitiesTimer) -> Result<(), String> {
+    if ctx.sender != ctx.identity() {
+        return Err(
+            "Reducer `scheduled` may not be invoked by clients, only via scheduling.".into(),
+        );
+    }
+    for entity in ctx.db.entity().iter() {
+        if entity.direction.is_some() {
+            ctx.db.entity().entity_id().update(Entity {
+                position: Vec2 {
+                    x: entity.position.x + entity.direction.unwrap().x * 100.0,
+                    z: entity.position.z + entity.direction.unwrap().z * 100.0,
+                },
+                ..entity
+            });
+        }
+    }
     Ok(())
 }
 
-#[reducer]
-/// Client can set their flag, removing their direction
-pub fn set_flag(ctx: &ReducerContext, flag: Vec2) -> Result<(), String> {
-    let player = ctx
-        .db
-        .player()
-        .identity()
-        .find(&ctx.sender)
-        .ok_or("Player not found")?;
-    ctx.db.player().identity().update(Player {
-        direction: None,
-        flag: Some(flag.normalized()),
-        ..player
-    });
+/// Now, we want to actually start scheduling reducers.
+#[reducer(init)]
+pub fn init(ctx: &ReducerContext) -> Result<(), String> {
+    log::info!("Initializing...");
+    ctx.db
+        .move_all_entities_timer()
+        .try_insert(MoveAllEntitiesTimer {
+            scheduled_id: 0,
+            scheduled_at: ScheduleAt::Interval(Duration::from_millis(1000).into()),
+        })?;
     Ok(())
 }

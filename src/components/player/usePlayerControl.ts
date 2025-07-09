@@ -15,7 +15,28 @@ export default function (
   let flagPosition = new Vector3(0, 0, 0)
   const shouldFollowPointer = ref(false)
 
+  /**
+   * Switch between mouse position and flag position. A flag is placed on mouse up.
+   */
   const targetPosition = computed(() => shouldFollowPointer.value ? getMouseWorldPosition() : flagPosition)
+
+  /**
+   * Returns the normalized direction vector
+   */
+  function getDirection() {
+    if (!playerRef.value || !cameraRef.value || !planeRef.value)
+      return
+    const targetDelta = new Vector3(
+      targetPosition.value.x - playerRef.value.position.x,
+      0,
+      targetPosition.value.z - playerRef.value.position.z
+    )
+
+    if (targetDelta.length() < toValue(speed) / 100)
+      return
+
+    return targetDelta.normalize()
+  }
 
   /**
    * Mouse down
@@ -58,23 +79,14 @@ export default function (
    * Move player
    */
   onBeforeRender(({ delta }) => {
-    if (!playerRef.value || !cameraRef.value || !planeRef.value)
+    const direction = getDirection()
+    if (!playerRef.value || !cameraRef.value || !planeRef.value || !direction)
       return
 
-    if (!targetPosition.value)
-      return
-
-    const distanceToFlagX = targetPosition.value.x - playerRef.value.position.x
-    const distanceToFlagZ = targetPosition.value.z - playerRef.value.position.z
-    const distanceToFlag = Math.sqrt(distanceToFlagX * distanceToFlagX + distanceToFlagZ * distanceToFlagZ)
-
-    if (distanceToFlag < toValue(speed) / 100)
-      return
+    playerRef.value.position.x += direction.x * delta * toValue(speed)
+    playerRef.value.position.z += direction.z * delta * toValue(speed)
 
     playerRef.value.lookAt(targetPosition.value)
-
-    playerRef.value.position.x += distanceToFlagX / distanceToFlag * delta * toValue(speed)
-    playerRef.value.position.z += distanceToFlagZ / distanceToFlag * delta * toValue(speed)
   })
 
   /**
@@ -90,12 +102,14 @@ export default function (
   })
 
   setInterval(() => {
-    if (shouldFollowPointer.value) {
-      useConnection.conn?.reducers.setDirection({ x: targetPosition.value.x, z: targetPosition.value.z })
-    } else {
-      useConnection.conn?.reducers.setFlag({ x: targetPosition.value.x, z: targetPosition.value.z })
-    }
+    const direction = getDirection()
+    useConnection.conn?.reducers.setDirection(direction ? { x: direction.x, z: direction.z } : undefined)
   }, 1000);
+
+  useConnection.conn?.db.entity.onUpdate(ctx => {
+    console.log(ctx);
+
+  })
 
   return {
     flagPosition,

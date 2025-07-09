@@ -32,23 +32,23 @@ import {
   type ReducerEventContextInterface,
   type SubscriptionEventContextInterface,
 } from "@clockworklabs/spacetimedb-sdk";
-import { Player } from "./player_type";
+import { MoveAllEntitiesTimer } from "./move_all_entities_timer_type";
 import { type EventContext, type Reducer, RemoteReducers, RemoteTables } from ".";
 
 /**
- * Table handle for the table `player`.
+ * Table handle for the table `move_all_entities_timer`.
  *
- * Obtain a handle from the [`player`] property on [`RemoteTables`],
- * like `ctx.db.player`.
+ * Obtain a handle from the [`moveAllEntitiesTimer`] property on [`RemoteTables`],
+ * like `ctx.db.moveAllEntitiesTimer`.
  *
  * Users are encouraged not to explicitly reference this type,
  * but to directly chain method calls,
- * like `ctx.db.player.on_insert(...)`.
+ * like `ctx.db.moveAllEntitiesTimer.on_insert(...)`.
  */
-export class PlayerTableHandle {
-  tableCache: TableCache<Player>;
+export class MoveAllEntitiesTimerTableHandle {
+  tableCache: TableCache<MoveAllEntitiesTimer>;
 
-  constructor(tableCache: TableCache<Player>) {
+  constructor(tableCache: TableCache<MoveAllEntitiesTimer>) {
     this.tableCache = tableCache;
   }
 
@@ -56,53 +56,53 @@ export class PlayerTableHandle {
     return this.tableCache.count();
   }
 
-  iter(): Iterable<Player> {
+  iter(): Iterable<MoveAllEntitiesTimer> {
     return this.tableCache.iter();
   }
   /**
-   * Access to the `identity` unique index on the table `player`,
+   * Access to the `scheduledId` unique index on the table `move_all_entities_timer`,
    * which allows point queries on the field of the same name
-   * via the [`PlayerIdentityUnique.find`] method.
+   * via the [`MoveAllEntitiesTimerScheduledIdUnique.find`] method.
    *
    * Users are encouraged not to explicitly reference this type,
    * but to directly chain method calls,
-   * like `ctx.db.player.identity().find(...)`.
+   * like `ctx.db.moveAllEntitiesTimer.scheduledId().find(...)`.
    *
-   * Get a handle on the `identity` unique index on the table `player`.
+   * Get a handle on the `scheduledId` unique index on the table `move_all_entities_timer`.
    */
-  identity = {
-    // Find the subscribed row whose `identity` column value is equal to `col_val`,
+  scheduledId = {
+    // Find the subscribed row whose `scheduledId` column value is equal to `col_val`,
     // if such a row is present in the client cache.
-    find: (col_val: Identity): Player | undefined => {
+    find: (col_val: bigint): MoveAllEntitiesTimer | undefined => {
       for (let row of this.tableCache.iter()) {
-        if (deepEqual(row.identity, col_val)) {
+        if (deepEqual(row.scheduledId, col_val)) {
           return row;
         }
       }
     },
   };
 
-  onInsert = (cb: (ctx: EventContext, row: Player) => void) => {
+  onInsert = (cb: (ctx: EventContext, row: MoveAllEntitiesTimer) => void) => {
     return this.tableCache.onInsert(cb);
   }
 
-  removeOnInsert = (cb: (ctx: EventContext, row: Player) => void) => {
+  removeOnInsert = (cb: (ctx: EventContext, row: MoveAllEntitiesTimer) => void) => {
     return this.tableCache.removeOnInsert(cb);
   }
 
-  onDelete = (cb: (ctx: EventContext, row: Player) => void) => {
+  onDelete = (cb: (ctx: EventContext, row: MoveAllEntitiesTimer) => void) => {
     return this.tableCache.onDelete(cb);
   }
 
-  removeOnDelete = (cb: (ctx: EventContext, row: Player) => void) => {
+  removeOnDelete = (cb: (ctx: EventContext, row: MoveAllEntitiesTimer) => void) => {
     return this.tableCache.removeOnDelete(cb);
   }
 
   // Updates are only defined for tables with primary keys.
-  onUpdate = (cb: (ctx: EventContext, oldRow: Player, newRow: Player) => void) => {
+  onUpdate = (cb: (ctx: EventContext, oldRow: MoveAllEntitiesTimer, newRow: MoveAllEntitiesTimer) => void) => {
     return this.tableCache.onUpdate(cb);
   }
 
-  removeOnUpdate = (cb: (ctx: EventContext, onRow: Player, newRow: Player) => void) => {
+  removeOnUpdate = (cb: (ctx: EventContext, onRow: MoveAllEntitiesTimer, newRow: MoveAllEntitiesTimer) => void) => {
     return this.tableCache.removeOnUpdate(cb);
   }}
