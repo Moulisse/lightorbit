@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ThreeEvent } from '@tresjs/core';
 import type Enemy from './Enemy';
-import { Cylinder, Plane } from '@tresjs/cientos';
 
 const props = defineProps<{
   data: Enemy

@@ -100,6 +100,8 @@ export default function (
     cameraRef.value.lookAt(playerRef.value.position)
   })
 
+  const { } = useWebSocket('ws://localhost:3000/_ws')
+
   setInterval(() => {
     const direction = getDirection()
     // useConnection.conn?.reducers.setDirection(direction ? { x: direction.x, z: direction.z } : undefined)

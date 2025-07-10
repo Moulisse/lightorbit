@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Plane } from '@tresjs/cientos';
-import { useTresContext } from '@tresjs/core';
 import { Group } from 'three';
 import usePlayerControl from './usePlayerControl';
 
