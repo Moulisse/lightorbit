@@ -3,12 +3,10 @@ import { Grid } from '@tresjs/cientos';
 import { TresCanvas } from '@tresjs/core'
 import { EffectComposerPmndrs, FXAAPmndrs } from '@tresjs/post-processing';
 
-const useConnection = useConnectionStore()
-useConnection.init()
 </script>
 
 <template>
-  <TresCanvas window-size v-if="useConnection.conn?.isActive">
+  <TresCanvas window-size>
     <TresPerspectiveCamera :position="[0, 150, 30]" :look-at="[0, 0, 0]" />
 
     <Grid :args="[10.5, 10.5]" cell-color="#f97316" :cell-size="1" :cell-thickness="0.8" section-color="#f97316"

@@ -4,10 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "st-start": "spacetime start",
-    "st-publish": "spacetime publish --project-path spacetimeDB/server orbit",
-    "st-publish-delete": "spacetime publish --project-path spacetimeDB/server orbit --delete-data",
-    "st-generate": "spacetime generate --lang typescript --out-dir src/module_bindings --project-path spacetimeDB/server",
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
@@ -18,7 +14,6 @@
     "lint": "run-s lint:*"
   },
   "dependencies": {
-    "@clockworklabs/spacetimedb-sdk": "^1.2.1",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/vue-query": "^5.81.5",
     "@tresjs/cientos": "^4.3.1",

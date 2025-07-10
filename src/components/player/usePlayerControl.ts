@@ -10,7 +10,6 @@ export default function (
   planeRef: ShallowRef<Object3D | undefined>,
 ) {
   const { x: pointerX, y: pointerY, pressure } = usePointer()
-  const useConnection = useConnectionStore()
 
   let flagPosition = new Vector3(0, 0, 0)
   const shouldFollowPointer = ref(false)
@@ -103,13 +102,13 @@ export default function (
 
   setInterval(() => {
     const direction = getDirection()
-    useConnection.conn?.reducers.setDirection(direction ? { x: direction.x, z: direction.z } : undefined)
+    // useConnection.conn?.reducers.setDirection(direction ? { x: direction.x, z: direction.z } : undefined)
   }, 1000);
 
-  useConnection.conn?.reducers.onMoveAllEntities(ctx => {
-    console.log(ctx);
+  // useConnection.conn?.reducers.onMoveAllEntities(ctx => {
+  //   console.log(ctx);
 
-  })
+  // })
 
   return {
     flagPosition,
