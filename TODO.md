@@ -1,0 +1,5 @@
+- find name
+- register domain at https://dash.cloudflare.com/fc962eb06402093ae7d067db7b57537c/registrar/register
+- setup email client
+- use email client in smtp at https://login.sendpulse.com/smtp/questionary/#
+- use smtp at https://supabase.com/dashboard/project/hmkkkfhztvpbcyngbhhx/auth/smtp
