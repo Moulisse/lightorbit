@@ -1,5 +1,15 @@
+import useSupabaseServer from "~/composables/useSupabaseServer";
+
+const supabase = useSupabaseServer()
+
 export default defineWebSocketHandler({
-  open(peer) {
+  async open(peer) {
+
+    if (!peer.request.headers.get('cookie'))
+      return peer.close()
+    const user = await supabase.auth.getUser('' + peer.request.headers.get('cookie'));
+    console.log(user);
+
     console.log("[ws] open", peer.id);
   },
 

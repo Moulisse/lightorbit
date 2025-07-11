@@ -24,7 +24,6 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@tresjs/nuxt',
     '@vueuse/nuxt',
-    '@nuxtjs/supabase',
   ],
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss(),], },
@@ -34,4 +33,12 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+  runtimeConfig: {
+    supabaseUrl: '',
+    supabaseKey: '',
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+    },
+  },
 })

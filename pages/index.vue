@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+const supabase = useSupabaseClient()
 
+supabase.auth.getUser().then(console.log)
 </script>
 
 <template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient()
 const email = ref('')
+
+const supabase = useSupabaseClient()
 
 const signInWithOtp = async () => {
   const { error } = await supabase.auth.signInWithOtp({

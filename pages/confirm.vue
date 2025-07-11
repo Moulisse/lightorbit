@@ -1,5 +1,16 @@
 <script setup lang="ts">
-const user = useSupabaseUser()
+const supabase = useSupabaseClient()
+
+const user = shallowRef()
+const { data } = supabase.auth.onAuthStateChange(async () => {
+  user.value = await supabase.auth.getUser()
+  console.log(user.value);
+
+})
+
+onUnmounted(() => {
+  data.subscription.unsubscribe()
+})
 
 watch(user, () => {
   if (user.value) {
