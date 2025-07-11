@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-const supabase = useSupabaseClient()
-
-supabase.auth.getUser().then(console.log)
+definePageMeta({
+  middleware: 'auth'
+})
 </script>
 
 <template>

@@ -100,7 +100,9 @@ export default function (
     cameraRef.value.lookAt(playerRef.value.position)
   })
 
-  const { } = useWebSocket('ws://localhost:3000/_ws')
+  const { status } = useWebSocket('ws://localhost:3000/_ws')
+
+  watch(status, console.log)
 
   setInterval(() => {
     const direction = getDirection()
@@ -115,6 +117,7 @@ export default function (
   return {
     flagPosition,
     pointerDown,
+    status,
   }
 
 }
